@@ -1,7 +1,7 @@
 package com.beydemir.assignment.wscachejson.webservice;
 
 import com.beydemir.assignment.wscachejson.repository.Subscriber;
-import com.beydemir.assignment.wscachejson.repository.SubscriberRepository;
+import com.beydemir.assignment.wscachejson.service.SubscriberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,13 +13,13 @@ import java.util.List;
 @Endpoint
 public class SubscribersEndpoint {
 
-    private SubscriberRepository subscriberRepository;
+    private SubscriberService subscriberService;
     private final static Logger logger = LoggerFactory.getLogger(SubscribersEndpoint.class);
 
 
     @Autowired
-    public SubscribersEndpoint(SubscriberRepository countryRepository) {
-        this.subscriberRepository = countryRepository;
+    public SubscribersEndpoint(SubscriberService subscriberService) {
+        this.subscriberService = subscriberService;
     }
 
     private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
@@ -30,7 +30,7 @@ public class SubscribersEndpoint {
     public GetSubscriberResponse getSubscriberById(@RequestPayload GetSubscriberRequest request) {
         logger.info("/getSubscriberById is = {}", request.getId());
         GetSubscriberResponse response = new GetSubscriberResponse();
-        Subscriber subscriber = subscriberRepository.findById(request.getId()).get();
+        Subscriber subscriber = subscriberService.findSubscriber(request.getId());
         com.beydemir.assignment.wscachejson.webservice.Subscriber returnVal = new com.beydemir.assignment.wscachejson.webservice.Subscriber();
         returnVal.setId(subscriber.getId());
         returnVal.setName(subscriber.getName());
@@ -45,7 +45,7 @@ public class SubscribersEndpoint {
         logger.info("/getAllSubscribers");
 
         GetAllSubscribersResponse response = new GetAllSubscribersResponse();
-        List<Subscriber> subscribers = subscriberRepository.findAll();
+        List<Subscriber> subscribers = subscriberService.getAllSubscribers();
         List<com.beydemir.assignment.wscachejson.webservice.Subscriber> returnListVal = new ArrayList<>();
 
         for(Subscriber subscriberElement : subscribers) {

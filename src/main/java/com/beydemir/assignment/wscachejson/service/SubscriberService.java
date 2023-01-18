@@ -24,6 +24,14 @@ public class SubscriberService {
         this.repository = repository;
     }
 
+    // get all records
+
+    public List<Subscriber> getAllSubscribers() {
+        logger.info("/subscriberService getAll");
+        return repository.findAll();
+    }
+
+    // save all records
     public void saveAll(List<Subscriber> subscriberList) {
         logger.info("/subscriberService SaveAll");
         repository.saveAll(subscriberList);
@@ -40,7 +48,6 @@ public class SubscriberService {
     @Cacheable(cacheNames = {"subscriberCache"}, key = "#subscriberId")
     public Subscriber findSubscriber(Long subscriberId) {
         // simulating backend querying delay
-        simulateBackendCall();
         return repository.findById(subscriberId).get();
     }
 
@@ -62,15 +69,5 @@ public class SubscriberService {
         logger.info("/subscriber[DELETE] id = {} ", subscriberRead.getId());
         repository.deleteById(subscriberRead.getId());
         return subscriberRead;
-    }
-
-    // this method will pause main thread for 5 seconds
-    public void simulateBackendCall() {
-        try {
-            System.out.println("------------- Going to sleep for 5 seconds to simulate Backend Delay -----------");
-            Thread.sleep(5 * 1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 }
