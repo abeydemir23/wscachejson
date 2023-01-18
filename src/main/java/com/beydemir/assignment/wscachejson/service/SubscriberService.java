@@ -25,7 +25,6 @@ public class SubscriberService {
     }
 
     // get all records
-
     public List<Subscriber> getAllSubscribers() {
         logger.info("/subscriberService getAll");
         return repository.findAll();
@@ -52,10 +51,9 @@ public class SubscriberService {
     }
 
     // updating existing record
-    @CachePut(cacheNames = {"subscriberCache"}, key="#subscriber.subscriberId")
+    @CachePut(cacheNames = {"subscriberCache"}, key="#subscriber")
     public Subscriber updateSubscriber(Subscriber subscriber) {
         logger.info("/subscriber[PUT] id = {}, name = {}, msisdn = {}", subscriber.getId(), subscriber.getName(), subscriber.getMsisdn());
-
         Subscriber subscriberRead = repository.findById(subscriber.getId()).orElseThrow(() -> new SubscriberNotFoundException("Subscriber Not Found"));
         subscriberRead.setName(subscriber.getName());
         subscriberRead.setMsisdn(subscriber.getMsisdn());
@@ -63,7 +61,7 @@ public class SubscriberService {
     }
 
     // deleting existing record
-    @CacheEvict(cacheNames = {"subscriberCache"}, key = "#subscriberId")
+    @CacheEvict(cacheNames = {"subscriberCache"}, key = "#subscriber")
     public Subscriber deleteSubscriber(Subscriber subscriber) {
         Subscriber subscriberRead = repository.findById(subscriber.getId()).orElseThrow(() -> new SubscriberNotFoundException("Subscriber Not Found"));
         logger.info("/subscriber[DELETE] id = {} ", subscriberRead.getId());
